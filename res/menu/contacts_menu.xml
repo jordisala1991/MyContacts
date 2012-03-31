@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/ContactsOpt1" android:title="@string/contactsmenu_add" android:icon="@drawable/add" ></item>
+    <item android:id="@+id/ContactsOpt2" android:title="@string/contactsmenu_see" android:icon="@drawable/see" ></item>
+    <item android:id="@+id/ContactsOpt3" android:title="@string/contactsmenu_settings" android:icon="@drawable/options" ></item>
+</menu>

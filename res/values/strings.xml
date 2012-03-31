@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyContacts</string>
+	<string name="tabContacts">Contactes</string>
+	<string name="tabGroups">Grups</string>
+	<string name="tabFavourites">Favorits</string>
+	<string name="contact_photo">Foto Contacte</string>
+	<string name="group_photo">Foto grup</string>
+	<string name="search">Cercar contacte</string>
+	<string name="delete_contact_dialog_title">Esborrar contacte</string>
+	<string name="delete_contact_dialog_message">Estas segur que desitges esborrar el contacte?</string>
+	<string name="delete_group_dialog_title">Esborrar grup</string>
+	<string name="delete_group_dialog_message">Estas segur que desitges esborrar el grup?</string>
+	<string name="delete_dialog_ok">Acceptar</string>
+	<string name="delete_dialog_no">Cancel·lar</string>
+	<string name="contactsclick_call">Trucar</string>
+	<string name="contactsclick_edit">Editar contacte</string>
+	<string name="contactsclick_remove">Esborrar contacte</string>
+	<string name="contactsmenu_add">Afegir contacte</string>
+	<string name="contactsmenu_see">Veure</string>
+	<string name="contactsmenu_settings">Opcions</string>
+	<string name="contactdetailsmenu_edit">Editar</string>
+	<string name="contactdetailsmenu_remove">Esborrar</string>
+	<string name="groupsclick_edit">Editar grup</string>
+	<string name="groupsclick_remove">Esborrar grup</string>
+	<string name="groupsmenu_add">Afegir grup</string>
+</resources>

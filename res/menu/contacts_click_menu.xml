@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:id="@+id/CallGroup">
+        <item android:id="@+id/ContactsClickOpt1" android:title="@string/contactsclick_call"></item>
+    </group>
+    <item android:id="@+id/ContactsClickOpt2" android:title="@string/contactsclick_edit"></item>
+    <item android:id="@+id/ContactsClickOpt3" android:title="@string/contactsclick_remove"></item>
+</menu>
