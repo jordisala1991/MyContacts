@@ -44,6 +44,18 @@
         
         android:textSize="15dip"
         android:textColor="#7a7a7a"
-        android:textStyle="bold"/> 
-
+        android:textStyle="bold"/>
+    
+	<CheckBox
+	    android:id="@+id/row_favourite"
+	    
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    
+	    android:button="@drawable/favourite_checkbox"
+	    android:focusable="false" />
+ 	
 </RelativeLayout>

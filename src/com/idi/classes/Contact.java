@@ -15,6 +15,7 @@ public class Contact implements Item, Parcelable
 	private boolean hasEmailAddress;
 	private ArrayList< Pair<String, Integer> > phones;
 	private ArrayList< Pair<String, Integer> > emails;
+	private boolean isFavourite;
 	
 	public Contact()
 	{
@@ -22,7 +23,7 @@ public class Contact implements Item, Parcelable
 	}
 	
 	public Contact(int id, String name, Bitmap photo, boolean hasPhoneNumber, boolean hasEmailAddress,
-				ArrayList< Pair<String, Integer> > phones, ArrayList< Pair<String, Integer> > emails)
+				ArrayList< Pair<String, Integer> > phones, ArrayList< Pair<String, Integer> > emails, boolean isFavourite)
 	{
 		this.id = id;
 		this.name = name;
@@ -31,6 +32,7 @@ public class Contact implements Item, Parcelable
 		this.hasEmailAddress = hasEmailAddress;
 		this.phones = phones;
 		this.emails = emails;
+		this.isFavourite = isFavourite;
 	}
 	
 	public Contact(Parcel in)
@@ -107,6 +109,16 @@ public class Contact implements Item, Parcelable
 	{
 		this.emails = emails;
 	}
+	
+	public boolean getIsFavourite()
+	{
+		return isFavourite;
+	}
+	
+	public void setIsFavourite(boolean isFavourite)
+	{
+		this.isFavourite = isFavourite;
+	}
 
 	public boolean isSection()
 	{
@@ -142,6 +154,7 @@ public class Contact implements Item, Parcelable
 		parcel.writeInt(hasEmailAddress ? 0 : 1);
 		parcel.writeList(phones);
 		parcel.writeList(emails);
+		parcel.writeInt(isFavourite ? 0 : 1);
 	}
 	
 	public void readFromParcel(Parcel parcel)
@@ -155,6 +168,7 @@ public class Contact implements Item, Parcelable
 		emails = new ArrayList< Pair<String, Integer> >();
 		parcel.readList(phones, null);
 		parcel.readList(emails , null);
+		isFavourite = parcel.readInt() == 0;
 	}
 	
 	@SuppressWarnings("rawtypes")

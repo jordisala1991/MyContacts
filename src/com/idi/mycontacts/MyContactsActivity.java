@@ -1,7 +1,6 @@
 package com.idi.mycontacts;
 
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -15,7 +14,6 @@ public class MyContactsActivity extends TabActivity
 	
 	private TabHost mTabHost;
 	private Resources mResources;
-	private Context mContext;
 	private SharedPreferences mSharedPreferences;
 	private static final String TAG_CONTACTS = "Contacts";
 	private static final String TAG_GROUPS = "Groups";
@@ -30,8 +28,7 @@ public class MyContactsActivity extends TabActivity
         setContentView(R.layout.main);
         mTabHost = getTabHost();
         mResources = getResources();
-        mContext = getApplicationContext();
-        mSharedPreferences = mContext.getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        mSharedPreferences = getApplicationContext().getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         if (!mSharedPreferences.getBoolean(INITIALIZED, false))
         {
         	Toast.makeText(this, "Primera Execucio", Toast.LENGTH_LONG).show();

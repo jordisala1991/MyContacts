@@ -30,6 +30,7 @@ public class ContactsHelper
 	private Resources resources;
 	private ArrayList<Contact> contacts;
 	private ArrayList<Section> sections;
+	private MyDbController db;
 	
 	public ContactsHelper(Context context)
 	{
@@ -37,6 +38,7 @@ public class ContactsHelper
 		resources = context.getResources();
 		contacts = new ArrayList<Contact>();
 		sections = new ArrayList<Section>();
+		db = new MyDbController(context);
 	}
 
 	public ArrayList<Item> getItemsViewAllContacts()
@@ -49,6 +51,7 @@ public class ContactsHelper
 			//getPhotos();
 			//getPhones();
 			//getEmails();
+			getIsFavourite();
 		}
 		res.addAll(contacts);
 		res.addAll(sections);
@@ -132,22 +135,45 @@ public class ContactsHelper
 //			int contactId = cursorPhotos.getInt(contactIdColumn);
 //			byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
 //			Log.d("id", String.valueOf(contactId));
-//			//Bitmap photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
+//			Bitmap photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
 //			Contact contact = new Contact();
 //			while (contact.getId() < contactId && contactsIndex < items.size())
 //			{
-//				Item item = items.get(contactsIndex);
+//				Item item = contacts.get(contactsIndex);
 //				if (item instanceof Contact) contact = (Contact) item;
 //				++contactsIndex;
 //			}
 //			if (contact.getId() == contactId)
 //			{
-//				//contact.setPhoto(photo);
+//				contact.setPhoto(photo);
 //				items.set(contactsIndex, contact);
 //			}
 //			cursorPhotos.moveToNext();
 //		}
 //	}
+	
+	private void getIsFavourite() {
+		db.open();
+		Cursor favourites = db.fetchFavourites();
+		int contactIdColumnIndex = favourites.getColumnIndex(MyDbController.KEY_IDCONTACT);
+		int contactsIndex = 0;
+		for (favourites.moveToFirst(); !favourites.isAfterLast(); favourites.moveToNext())
+		{
+			int favourite = favourites.getInt(contactIdColumnIndex);
+			while (contactsIndex < contacts.size())
+			{
+				Contact contact = contacts.get(contactsIndex);
+				if (contact.getId() == favourite)
+				{
+					contact.setIsFavourite(true);
+					contacts.set(contactsIndex, contact);
+					break;
+				}
+				++contactsIndex;
+			}
+		}
+		db.close();
+	}
 	
 	/*public ArrayList<Item> getItemsViewAllContacts()
 	{
