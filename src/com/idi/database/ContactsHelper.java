@@ -48,7 +48,7 @@ public class ContactsHelper
 		if (contacts.size() > 0)
 		{
 			getContactsName();
-			//getPhotos();
+			getPhotos();
 			//getPhones();
 			//getEmails();
 			getIsFavourite();
@@ -65,8 +65,7 @@ public class ContactsHelper
 		Cursor cursorContacts = contentResolver.query(RawContacts.CONTENT_URI, projection, null, null, RawContacts.CONTACT_ID + " ASC");
 		int contactIdColumn = cursorContacts.getColumnIndex(RawContacts.CONTACT_ID);
 		int deletedColumn = cursorContacts.getColumnIndex(RawContacts.DELETED);
-		cursorContacts.moveToFirst();
-		while(!cursorContacts.isAfterLast())
+		for(cursorContacts.moveToFirst(); !cursorContacts.isAfterLast(); cursorContacts.moveToNext())
 		{
 			int contactId = cursorContacts.getInt(contactIdColumn);
 			boolean deleted = (cursorContacts.getInt(deletedColumn) == 1);
@@ -76,7 +75,6 @@ public class ContactsHelper
 				contact.setId(contactId);
 				contacts.add(contact);
 			}
-			cursorContacts.moveToNext();
 		}
 		cursorContacts.close();
 	}
@@ -122,35 +120,42 @@ public class ContactsHelper
 		cursorContacts.close();		
 	}
 
-//	private void getPhotos()
-//	{
-//		int contactsIndex = 0;
-//		String[] projection = new String[] { Photo.CONTACT_ID, Photo.PHOTO };
-//		Cursor cursorPhotos = contentResolver.query(Data.CONTENT_URI, projection, null, null, Photo.CONTACT_ID + " ASC");
-//		int contactIdColumn = cursorPhotos.getColumnIndex(Photo.CONTACT_ID);
-//		int photoColumn = cursorPhotos.getColumnIndex(Photo.PHOTO);
-//		cursorPhotos.moveToFirst();
-//		while (!cursorPhotos.isAfterLast())
-//		{
-//			int contactId = cursorPhotos.getInt(contactIdColumn);
-//			byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
-//			Log.d("id", String.valueOf(contactId));
-//			Bitmap photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
-//			Contact contact = new Contact();
-//			while (contact.getId() < contactId && contactsIndex < items.size())
-//			{
-//				Item item = contacts.get(contactsIndex);
-//				if (item instanceof Contact) contact = (Contact) item;
-//				++contactsIndex;
-//			}
-//			if (contact.getId() == contactId)
-//			{
-//				contact.setPhoto(photo);
-//				items.set(contactsIndex, contact);
-//			}
-//			cursorPhotos.moveToNext();
-//		}
-//	}
+	private void getPhotos()
+	{
+		int contactsIndex = 0;
+		int oldContactId = -1;
+		String[] projection = new String[] { Photo.CONTACT_ID, Photo.PHOTO };
+		Cursor cursorPhotos = contentResolver.query(Data.CONTENT_URI, projection, null, null, Photo.CONTACT_ID + " ASC");
+		int contactIdColumn = cursorPhotos.getColumnIndex(Photo.CONTACT_ID);
+		int photoColumn = cursorPhotos.getColumnIndex(Photo.PHOTO);
+		for (cursorPhotos.moveToFirst(); !cursorPhotos.isAfterLast(); cursorPhotos.moveToNext())
+		{
+			int contactId = cursorPhotos.getInt(contactIdColumn);
+			while (contactId == oldContactId && !cursorPhotos.isLast())
+			{
+				cursorPhotos.moveToNext();
+				contactId = cursorPhotos.getInt(contactIdColumn);
+			}
+			byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
+			Bitmap photo = null;
+			if (photoBlob != null) photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
+			else photo = BitmapFactory.decodeResource(resources, resources.getIdentifier("default_contact_photo", "drawable", "com.idi.mycontacts"));
+			photo = Bitmap.createScaledBitmap(photo, 96, 96, true);
+			while (contactsIndex < contacts.size())
+			{
+				Contact contact = contacts.get(contactsIndex);
+				++contactsIndex;
+				if (contactId == contact.getId())
+				{
+					contact.setPhoto(photo);
+					contacts.set(contactsIndex - 1, contact);
+					break;
+				}
+			}
+			oldContactId = contactId;
+		}
+		cursorPhotos.close();
+	}
 	
 	private void getIsFavourite() {
 		db.open();
@@ -163,13 +168,13 @@ public class ContactsHelper
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
+				++contactsIndex;
 				if (contact.getId() == favourite)
 				{
 					contact.setIsFavourite(true);
-					contacts.set(contactsIndex, contact);
+					contacts.set(contactsIndex -1, contact);
 					break;
 				}
-				++contactsIndex;
 			}
 		}
 		db.close();
