@@ -19,7 +19,8 @@ public class Contact implements Item, Parcelable
 	
 	public Contact()
 	{
-		
+		phones = new ArrayList< Pair<String, Integer> >();
+		emails = new ArrayList< Pair<String, Integer> >();
 	}
 	
 	public Contact(int id, String name, Bitmap photo, boolean hasPhoneNumber, boolean hasEmailAddress,
@@ -119,6 +120,17 @@ public class Contact implements Item, Parcelable
 	{
 		this.isFavourite = isFavourite;
 	}
+	
+	public void addPhoneNumber(String number, int typeNumber)
+	{
+		this.phones.add(new Pair<String, Integer>(number, typeNumber));
+	}
+
+	public void addEmailAddress(String email, int typeEmail)
+	{
+		this.emails.add(new Pair<String, Integer>(email, typeEmail));
+	}
+	
 
 	public boolean isSection()
 	{
@@ -184,5 +196,5 @@ public class Contact implements Item, Parcelable
             return new Contact[size];
         }
     };
-	
+
 }
