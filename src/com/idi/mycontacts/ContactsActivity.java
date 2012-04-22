@@ -53,7 +53,13 @@ public class ContactsActivity extends ListActivity
         contactsHelper = new ContactsHelper(this);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
-        fillData();
+    }
+    
+    @Override 
+    public void onResume()
+    {
+    	super.onResume();
+    	fillData();
     }
     
     public void fillData()

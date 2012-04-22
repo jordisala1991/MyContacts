@@ -81,7 +81,7 @@ public class MyContactsListViewAdapter extends ArrayAdapter<Item>
         	holder.photo.setImageBitmap(contact.getPhoto());
         	holder.favCheck.setOnCheckedChangeListener(null);
         	holder.favCheck.setChecked(contact.getIsFavourite());
-        	holder.favCheck.setOnCheckedChangeListener(new MyOnCheckedChangeListener(getContext(), contact.getId(), position));
+        	holder.favCheck.setOnCheckedChangeListener(new MyOnCheckedChangeContactsListener(getContext(), contact.getId(), position));
         }
         return convertView;
     }

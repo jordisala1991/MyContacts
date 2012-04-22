@@ -52,6 +52,21 @@ public class ContactsHelper
 		Collections.sort(res);
 		return res;
 	}
+	
+	public ArrayList<Contact> getItemsViewFavourites()
+	{
+		contacts = new ArrayList<Contact>();
+		getContactsId();
+		getIsFavourite();
+		deleteNonFavourites();
+		getContactsName();
+		getPhotos();
+		getPhones();
+		getEmails();
+		deleteFakeContacts();
+		Collections.sort(contacts);
+		return contacts;
+	}
 
 	private void getContactsId()
 	{
@@ -61,10 +76,10 @@ public class ContactsHelper
 		int deletedColumn = cursorContacts.getColumnIndex(RawContacts.DELETED);
 		for(cursorContacts.moveToFirst(); !cursorContacts.isAfterLast(); cursorContacts.moveToNext())
 		{
-			int contactId = cursorContacts.getInt(contactIdColumn);
 			boolean deleted = (cursorContacts.getInt(deletedColumn) == 1);
 			if(!deleted)
 			{
+				int contactId = cursorContacts.getInt(contactIdColumn);
 				Contact contact = new Contact();
 				contact.setId(contactId);
 				contacts.add(contact);
@@ -83,7 +98,6 @@ public class ContactsHelper
 		for (cursorContacts.moveToFirst(); !cursorContacts.isAfterLast(); cursorContacts.moveToNext())
 		{
 			int contactId = cursorContacts.getInt(contactIdColumn);
-			String name = cursorContacts.getString(nameColumn);
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
@@ -91,6 +105,7 @@ public class ContactsHelper
 				++contactsIndex;
 				if (contact.getId() == contactId)
 				{
+					String name = cursorContacts.getString(nameColumn);
 					contact.setName(name);
 					contacts.set(contactsIndex - 1, contact);
 					break;
@@ -108,14 +123,10 @@ public class ContactsHelper
 		int contactIdColumn = cursorPhotos.getColumnIndex(Photo.CONTACT_ID);
 		int photoColumn = cursorPhotos.getColumnIndex(Photo.PHOTO);
 		Bitmap photoDefault = BitmapFactory.decodeResource(resources, resources.getIdentifier("default_contact_photo", "drawable", "com.idi.mycontacts"));
+		photoDefault = Bitmap.createScaledBitmap(photoDefault, 96, 96, false);
 		for (cursorPhotos.moveToFirst(); !cursorPhotos.isAfterLast(); cursorPhotos.moveToNext())
 		{
 			int contactId = cursorPhotos.getInt(contactIdColumn);
-			byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
-			Bitmap photo = null;
-			if (photoBlob != null) photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
-			else photo = photoDefault;
-			photo = Bitmap.createScaledBitmap(photo, 96, 96, true);
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
@@ -123,6 +134,14 @@ public class ContactsHelper
 				++contactsIndex;
 				if (contactId == contact.getId())
 				{
+					byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
+					Bitmap photo = null;
+					if (photoBlob != null)
+					{
+						photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
+						photo = Bitmap.createScaledBitmap(photo, 96, 96, false);
+					}
+					else photo = photoDefault;
 					contact.setPhoto(photo);
 					contacts.set(contactsIndex - 1, contact);
 					break;
@@ -132,7 +151,8 @@ public class ContactsHelper
 		cursorPhotos.close();
 	}
 	
-	private void getPhones() {
+	private void getPhones()
+	{
 		int contactsIndex = 0;
 		final String[] projection = new String[] { Phone.CONTACT_ID, Phone.NUMBER, Phone.TYPE };
 		final Cursor cursorPhones = contentResolver.query(Phone.CONTENT_URI, projection, null, null, Phone.CONTACT_ID + " ASC");
@@ -142,15 +162,16 @@ public class ContactsHelper
 		for (cursorPhones.moveToFirst(); !cursorPhones.isAfterLast(); cursorPhones.moveToNext())
 		{
 			int contactId = cursorPhones.getInt(contactIdColumn);
-			String number = cursorPhones.getString(phoneColumn);
-			int type = cursorPhones.getInt(typeColumn);
-			int typeLabelResource = Phone.getTypeLabelResource(type);
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
 				if (contactId < contact.getId()) break;
 				if (contactId == contact.getId())
 				{
+
+					String number = cursorPhones.getString(phoneColumn);
+					int type = cursorPhones.getInt(typeColumn);
+					int typeLabelResource = Phone.getTypeLabelResource(type);
 					contact.addPhoneNumber(number, typeLabelResource);
 					contact.setHasPhoneNumber(true);
 					contacts.set(contactsIndex, contact);
@@ -162,7 +183,8 @@ public class ContactsHelper
 		cursorPhones.close();
 	}
 	
-	private void getEmails() {
+	private void getEmails()
+	{
 		int contactsIndex = 0;
 		final String[] projection = new String[] { Email.CONTACT_ID, Email.DATA, Email.TYPE };
 		final Cursor cursorEmails = contentResolver.query(Email.CONTENT_URI, projection, null, null, Email.CONTACT_ID + " ASC");
@@ -172,15 +194,15 @@ public class ContactsHelper
 		for (cursorEmails.moveToFirst(); !cursorEmails.isAfterLast(); cursorEmails.moveToNext())
 		{
 			int contactId = cursorEmails.getInt(contactIdColumn);
-			String email = cursorEmails.getString(emailColumn);
-			int type = cursorEmails.getInt(typeColumn);
-			int typeLabelResource = Phone.getTypeLabelResource(type);
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
 				if (contactId < contact.getId()) break;
 				if (contactId == contact.getId())
 				{
+					String email = cursorEmails.getString(emailColumn);
+					int type = cursorEmails.getInt(typeColumn);
+					int typeLabelResource = Phone.getTypeLabelResource(type);
 					contact.addEmailAddress(email, typeLabelResource);
 					contact.setHasEmailAddress(true);
 					contacts.set(contactsIndex, contact);
@@ -192,7 +214,8 @@ public class ContactsHelper
 		cursorEmails.close();
 	}
 	
-	private void getIsFavourite() {
+	private void getIsFavourite()
+	{
 		db.open();
 		Cursor favourites = db.fetchFavourites();
 		int contactIdColumnIndex = favourites.getColumnIndex(MyDbController.KEY_IDCONTACT);
@@ -215,14 +238,18 @@ public class ContactsHelper
 		db.close();
 	}
 	
-	private void deleteFakeContacts() {
-		for (int i = 0; i < contacts.size(); ++i)
+	private void deleteFakeContacts()
+	{
+		int i = 0;
+		while (i < contacts.size())
 		{
 			if (contacts.get(i).getName() == "") contacts.remove(i);
+			else ++i;
 		}
 	}
 	
-	private void calculateSections() {
+	private void calculateSections()
+	{
 		ArrayList<String> lettersUsed = new ArrayList<String>();
 		for (int i = 0; i < contacts.size(); ++i)
 		{
@@ -234,6 +261,16 @@ public class ContactsHelper
 				sections.add(new Section(firstLetter));
 				lettersUsed.add(firstLetter);
 			}
+		}
+	}
+
+	private void deleteNonFavourites()
+	{
+		int i = 0;
+		while (i < contacts.size())
+		{
+			if (!contacts.get(i).getIsFavourite()) contacts.remove(i);
+			else ++i;
 		}
 	}
 
