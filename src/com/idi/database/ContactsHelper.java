@@ -31,23 +31,22 @@ public class ContactsHelper
 	{
 		contentResolver = context.getContentResolver();
 		resources = context.getResources();
-		contacts = new ArrayList<Contact>();
-		sections = new ArrayList<Section>();
 		db = new MyDbController(context);
 	}
 
 	public ArrayList<Item> getItemsViewAllContacts()
 	{
 		ArrayList<Item> res = new ArrayList<Item>();
+		contacts = new ArrayList<Contact>();
+		sections = new ArrayList<Section>();
 		getContactsId();
-		if (contacts.size() > 0)
-		{
-			getContactsName();
-			getPhotos();
-			getPhones();
-			getEmails();
-			getIsFavourite();
-		}
+		getContactsName();
+		getPhotos();
+		getPhones();
+		getEmails();
+		getIsFavourite();
+		deleteFakeContacts();
+		calculateSections();
 		res.addAll(contacts);
 		res.addAll(sections);
 		Collections.sort(res);
@@ -76,69 +75,51 @@ public class ContactsHelper
 	
 	private void getContactsName()
 	{
-		ArrayList<String> lettersUsed = new ArrayList<String>();
 		int contactsIndex = 0;
-		int contactId = 0;
-		String name = "";
 		String[] projection = new String[] { Contacts._ID, Contacts.DISPLAY_NAME };
 		Cursor cursorContacts = contentResolver.query(Contacts.CONTENT_URI, projection, null, null, Contacts._ID + " ASC");
 		int contactIdColumn = cursorContacts.getColumnIndex(Contacts._ID);
 		int nameColumn = cursorContacts.getColumnIndex(Contacts.DISPLAY_NAME);
-		cursorContacts.moveToFirst();
-		while(!cursorContacts.isAfterLast() && contactsIndex < contacts.size())
+		for (cursorContacts.moveToFirst(); !cursorContacts.isAfterLast(); cursorContacts.moveToNext())
 		{
-			Contact contact = contacts.get(contactsIndex);
-			while (contactId < contact.getId() && !cursorContacts.isAfterLast())
+			int contactId = cursorContacts.getInt(contactIdColumn);
+			String name = cursorContacts.getString(nameColumn);
+			while (contactsIndex < contacts.size())
 			{
-				contactId = cursorContacts.getInt(contactIdColumn);
-				name = cursorContacts.getString(nameColumn);
-				cursorContacts.moveToNext();
-			}
-			if (contactId == contact.getId())
-			{
-				if (name != null && name.length() > 0)
-				{
-					String newLetter = name.substring(0, 1).toUpperCase();
-					if (!newLetter.matches("[A-Z]")) newLetter = "#";
-					if (!lettersUsed.contains(newLetter))
-					{
-						lettersUsed.add(newLetter);
-						sections.add(new Section(newLetter));
-					}
-				}
-				contact.setName(name);
-				contacts.set(contactsIndex, contact);
+				Contact contact = contacts.get(contactsIndex);
+				if (contactId < contact.getId()) break;
 				++contactsIndex;
+				if (contact.getId() == contactId)
+				{
+					contact.setName(name);
+					contacts.set(contactsIndex - 1, contact);
+					break;
+				}
 			}
-			else contacts.remove(contactsIndex);			
 		}
-		cursorContacts.close();		
+		cursorContacts.close();	
 	}
 
 	private void getPhotos()
 	{
 		int contactsIndex = 0;
-		int oldContactId = -1;
 		String[] projection = new String[] { Photo.CONTACT_ID, Photo.PHOTO };
 		Cursor cursorPhotos = contentResolver.query(Data.CONTENT_URI, projection, null, null, Photo.CONTACT_ID + " ASC");
 		int contactIdColumn = cursorPhotos.getColumnIndex(Photo.CONTACT_ID);
 		int photoColumn = cursorPhotos.getColumnIndex(Photo.PHOTO);
+		Bitmap photoDefault = BitmapFactory.decodeResource(resources, resources.getIdentifier("default_contact_photo", "drawable", "com.idi.mycontacts"));
 		for (cursorPhotos.moveToFirst(); !cursorPhotos.isAfterLast(); cursorPhotos.moveToNext())
 		{
 			int contactId = cursorPhotos.getInt(contactIdColumn);
-			while (contactId == oldContactId && !cursorPhotos.isLast())
-			{
-				cursorPhotos.moveToNext();
-				contactId = cursorPhotos.getInt(contactIdColumn);
-			}
 			byte[] photoBlob = cursorPhotos.getBlob(photoColumn);
 			Bitmap photo = null;
 			if (photoBlob != null) photo = BitmapFactory.decodeByteArray(photoBlob, 0, photoBlob.length);
-			else photo = BitmapFactory.decodeResource(resources, resources.getIdentifier("default_contact_photo", "drawable", "com.idi.mycontacts"));
+			else photo = photoDefault;
 			photo = Bitmap.createScaledBitmap(photo, 96, 96, true);
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
+				if (contactId < contact.getId()) break;
 				++contactsIndex;
 				if (contactId == contact.getId())
 				{
@@ -147,7 +128,6 @@ public class ContactsHelper
 					break;
 				}
 			}
-			oldContactId = contactId;
 		}
 		cursorPhotos.close();
 	}
@@ -168,14 +148,15 @@ public class ContactsHelper
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
-				++contactsIndex;
+				if (contactId < contact.getId()) break;
 				if (contactId == contact.getId())
 				{
 					contact.addPhoneNumber(number, typeLabelResource);
 					contact.setHasPhoneNumber(true);
-					contacts.set(contactsIndex - 1, contact);
+					contacts.set(contactsIndex, contact);
 					break;
 				}
+				++contactsIndex;
 			}
 		}
 		cursorPhones.close();
@@ -197,14 +178,15 @@ public class ContactsHelper
 			while (contactsIndex < contacts.size())
 			{
 				Contact contact = contacts.get(contactsIndex);
-				++contactsIndex;
+				if (contactId < contact.getId()) break;
 				if (contactId == contact.getId())
 				{
 					contact.addEmailAddress(email, typeLabelResource);
 					contact.setHasEmailAddress(true);
-					contacts.set(contactsIndex - 1, contact);
+					contacts.set(contactsIndex, contact);
 					break;
 				}
+				++contactsIndex;
 			}
 		}
 		cursorEmails.close();
@@ -231,6 +213,28 @@ public class ContactsHelper
 			}
 		}
 		db.close();
+	}
+	
+	private void deleteFakeContacts() {
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			if (contacts.get(i).getName() == "") contacts.remove(i);
+		}
+	}
+	
+	private void calculateSections() {
+		ArrayList<String> lettersUsed = new ArrayList<String>();
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			String firstLetter = contacts.get(i).getName().substring(0, 1);
+			if (firstLetter.matches("[a-zA-Z]")) firstLetter = firstLetter.toUpperCase();
+			else firstLetter = "#";
+			if (!lettersUsed.contains(firstLetter))
+			{
+				sections.add(new Section(firstLetter));
+				lettersUsed.add(firstLetter);
+			}
+		}
 	}
 
 }

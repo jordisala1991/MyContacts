@@ -28,17 +28,18 @@ public class Section implements Item
 
 	public int compareTo(Item obj)
 	{
-		if (obj instanceof Section)
+		if (getTitle() == "#") return -1;
+		if (obj.isSection())
 		{
 			Section aux = (Section) obj;
 			return getTitle().compareToIgnoreCase(aux.getTitle());
 		}
-		else if (obj instanceof Contact)
+		else
 		{
 			Contact aux = (Contact) obj;
-			return getTitle().compareToIgnoreCase(aux.getName());
+			int result = getTitle().compareToIgnoreCase(aux.getName());
+			return (result == 0)? -1: result;
 		}
-		return 0;
 	}
 
 }

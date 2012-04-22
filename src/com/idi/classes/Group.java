@@ -2,7 +2,7 @@ package com.idi.classes;
 
 import android.graphics.Bitmap;
 
-public class Group {
+public class Group implements Comparable<Group> {
 	
 	private long id;
 	private String name;
@@ -48,6 +48,11 @@ public class Group {
 	public void setPhoto(Bitmap photo)
 	{
 		this.photo = photo;
+	}
+
+	@Override
+	public int compareTo(Group aux) {
+		return getName().compareToIgnoreCase(aux.getName());
 	}
 
 }

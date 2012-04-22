@@ -21,6 +21,7 @@ public class Contact implements Item, Parcelable
 	{
 		phones = new ArrayList< Pair<String, Integer> >();
 		emails = new ArrayList< Pair<String, Integer> >();
+		name = "";
 	}
 	
 	public Contact(int id, String name, Bitmap photo, boolean hasPhoneNumber, boolean hasEmailAddress,
@@ -139,17 +140,19 @@ public class Contact implements Item, Parcelable
 
 	public int compareTo(Item obj)
 	{
-		if (obj instanceof Section)
+		if (obj.isSection())
 		{
 			Section aux = (Section) obj;
-			return getName().compareToIgnoreCase(aux.getTitle());
+			if (aux.getTitle() == "#") return 1;
+			
+			int result = getName().compareToIgnoreCase(aux.getTitle());
+			return (result == 0)? 1 : result;
 		}
-		else if (obj instanceof Contact)
+		else
 		{
 			Contact aux = (Contact) obj;
 			return getName().compareToIgnoreCase(aux.getName());
 		}
-		return 0;
 	}
 
 	public int describeContents()

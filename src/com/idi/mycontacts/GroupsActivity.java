@@ -1,15 +1,15 @@
 package com.idi.mycontacts;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import com.idi.adapters.MyGroupsListViewAdapter;
 import com.idi.classes.Group;
+import com.idi.database.GroupsHelper;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,8 +23,9 @@ import android.widget.Toast;
 public class GroupsActivity extends ListActivity
 {
 	
-	private ArrayList<Group> mGroups = null;
+	private ArrayList<Group> mGroups;
 	private MyGroupsListViewAdapter mAdapter;
+	private GroupsHelper groupsHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -33,6 +34,7 @@ public class GroupsActivity extends ListActivity
         setContentView(R.layout.groups);
         mGroups = new ArrayList<Group>();
         mAdapter = new MyGroupsListViewAdapter(this, R.layout.group_row, mGroups);
+        groupsHelper = new GroupsHelper(this);
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
         fillData();
@@ -40,21 +42,10 @@ public class GroupsActivity extends ListActivity
 
 	private void fillData()
 	{
-		final String[] GROUP_PROJECTION = new String[] { ContactsContract.Groups._ID, ContactsContract.Groups.TITLE, ContactsContract.Groups.ACCOUNT_TYPE, ContactsContract.Groups.NOTES};
-		Cursor cursor = managedQuery(ContactsContract.Groups.CONTENT_URI, GROUP_PROJECTION, null, null, ContactsContract.Groups.TITLE + " ASC");
-		cursor.moveToFirst();
-		Bitmap photo = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("default_group_photo", "drawable", "com.idi.mycontacts"));
-		while (!cursor.isAfterLast())
-		{
-			int num = cursor.getInt(cursor.getColumnIndex(ContactsContract.Groups._ID));
-			String nom = cursor.getString(cursor.getColumnIndex(ContactsContract.Groups.TITLE));
-			String nom2 = cursor.getString(cursor.getColumnIndex(ContactsContract.Groups.ACCOUNT_TYPE));
-			String nom3 = cursor.getString(cursor.getColumnIndex(ContactsContract.Groups.NOTES));
-			
-			mAdapter.add(new Group(num, nom+" "+nom2+" "+nom3, photo));
-			cursor.moveToNext();
-		}
-		cursor.close();
+		mGroups = groupsHelper.getItemsViewAllGroups();
+		Collections.sort(mGroups);
+		mAdapter.clear();
+		for (int i = 0; i < mGroups.size(); ++i) mAdapter.add(mGroups.get(i));
 		mAdapter.notifyDataSetChanged();
 	}
 	

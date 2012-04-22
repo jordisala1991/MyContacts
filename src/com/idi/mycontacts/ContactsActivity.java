@@ -33,7 +33,7 @@ public class ContactsActivity extends ListActivity
 	
 	private EditText mSearch;
 	private LinearLayout mSearchLayout;
-	private ArrayList<Item> mContacts = null;
+	private ArrayList<Item> mContacts;
     private MyContactsListViewAdapter mAdapter;
     private ContactsHelper contactsHelper;
     private static final int INSERT_CONTACT = 1;
@@ -54,7 +54,6 @@ public class ContactsActivity extends ListActivity
         setListAdapter(mAdapter);
         registerForContextMenu(getListView());
         fillData();
-        mSearch.addTextChangedListener(new MyTextWatcher(mContacts, mAdapter));
     }
     
     public void fillData()
@@ -64,6 +63,7 @@ public class ContactsActivity extends ListActivity
     	mAdapter.clear();
     	for (int i = 0; i < mContacts.size(); ++i) mAdapter.add(mContacts.get(i));
     	mAdapter.notifyDataSetChanged();
+        mSearch.addTextChangedListener(new MyTextWatcher(mContacts, mAdapter));
 	}
 
 	@Override
