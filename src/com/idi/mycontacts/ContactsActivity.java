@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.ContactsContract.Contacts;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -92,7 +92,7 @@ public class ContactsActivity extends ListActivity
 	    {
 	        case R.id.ContactsOpt1:
 	            Intent intent = new Intent(Intent.ACTION_INSERT);
-	            intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+	            intent.setType(Contacts.CONTENT_TYPE);
 	            startActivityForResult(intent, INSERT_CONTACT);
 	            return true;
 	        case R.id.ContactsOpt2:
@@ -110,12 +110,11 @@ public class ContactsActivity extends ListActivity
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
 	{
 	    super.onCreateContextMenu(menu, v, menuInfo);
-	    MenuInflater inflater = getMenuInflater();
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	    Contact contact = (Contact) getListView().getAdapter().getItem(info.position);
         menu.setHeaderTitle(contact.getName());
         menu.setHeaderIcon(R.drawable.dialog_icon);
-        inflater.inflate(R.menu.contacts_click_menu, menu);
+        getMenuInflater().inflate(R.menu.contacts_click_menu, menu);
 	    if (!contact.getHasPhoneNumber()) menu.setGroupVisible(R.id.CallGroup, false);
 	}
 	
@@ -131,7 +130,7 @@ public class ContactsActivity extends ListActivity
 	            return true;
 	        case R.id.ContactsClickOpt2:
 	            Intent intent = new Intent(Intent.ACTION_EDIT);
-	            intent.setData(Uri.parse(ContactsContract.Contacts.CONTENT_LOOKUP_URI + "/" + contact.getId()));
+	            intent.setData(Uri.parse(Contacts.CONTENT_LOOKUP_URI + "/" + contact.getId()));
 	            startActivityForResult(intent, MODIFY_CONTACT);
 	            return true;
 	        case R.id.ContactsClickOpt3:

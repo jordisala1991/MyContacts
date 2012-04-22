@@ -24,4 +24,6 @@
 	<string name="groupsclick_edit">Editar grup</string>
 	<string name="groupsclick_remove">Esborrar grup</string>
 	<string name="groupsmenu_add">Afegir grup</string>
+	<string name="groupdetailsmenu_edit">Editar</string>
+	<string name="groupdetailsmenu_remove">Esborrar</string>
 </resources>

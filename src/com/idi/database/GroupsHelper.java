@@ -25,16 +25,21 @@ public class GroupsHelper
 
 	public ArrayList<Group> getItemsViewAllGroups() {
 		ArrayList<Group> groups = new ArrayList<Group>();
-		final String[] projection = new String[] { Groups._ID, Groups.TITLE, Groups.ACCOUNT_TYPE, Groups.NOTES};
+		final String[] projection = new String[] { Groups._ID, Groups.TITLE, Groups.DELETED };
 		Cursor cursorGroups = contentResolver.query(Groups.CONTENT_URI, projection, null, null, Groups.TITLE + " ASC");
 		int groupIdColumn = cursorGroups.getColumnIndex(Groups._ID);
 		int groupNameColumn = cursorGroups.getColumnIndex(Groups.TITLE);
+		int deletedColumn = cursorGroups.getColumnIndex(Groups.DELETED);
 		Bitmap photo = BitmapFactory.decodeResource(resources, resources.getIdentifier("default_group_photo", "drawable", "com.idi.mycontacts"));
 		for (cursorGroups.moveToFirst(); !cursorGroups.isAfterLast(); cursorGroups.moveToNext())
 		{
 			int groupId = cursorGroups.getInt(groupIdColumn);
 			String name = cursorGroups.getString(groupNameColumn);
-			groups.add(new Group(groupId, name, photo));
+			boolean deleted = (cursorGroups.getInt(deletedColumn) == 1);
+			if (!deleted)
+			{
+				groups.add(new Group(groupId, name, photo));	
+			}
 		}
 		cursorGroups.close();
 		return groups;
