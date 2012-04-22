@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 
 public class MyContactsActivity extends TabActivity
@@ -31,7 +30,6 @@ public class MyContactsActivity extends TabActivity
         mSharedPreferences = getApplicationContext().getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         if (!mSharedPreferences.getBoolean(INITIALIZED, false))
         {
-        	Toast.makeText(this, "Primera Execucio", Toast.LENGTH_LONG).show();
         	SharedPreferences.Editor editor = mSharedPreferences.edit();
         	editor.putBoolean(INITIALIZED, true);
         	editor.commit();

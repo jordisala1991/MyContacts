@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.idi.adapters.MyFavouritesListViewAdapter;
 import com.idi.classes.Contact;
@@ -23,6 +24,7 @@ import com.idi.database.ContactsHelper;
 public class FavouritesActivity extends ListActivity
 {
 	
+	private TextView mEmptyView;
 	private ArrayList<Contact> mContacts;
     private MyFavouritesListViewAdapter mAdapter;
     private ContactsHelper contactsHelper;
@@ -34,10 +36,12 @@ public class FavouritesActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.favourites);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
         mContacts = new ArrayList<Contact>();
         mAdapter = new MyFavouritesListViewAdapter(this, R.layout.contact_row, mContacts);
         contactsHelper = new ContactsHelper(this);
         setListAdapter(mAdapter);
+        getListView().setEmptyView(mEmptyView);
         registerForContextMenu(getListView());
     }
     

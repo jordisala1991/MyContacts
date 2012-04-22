@@ -19,11 +19,13 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class GroupsActivity extends ListActivity
 {
 	
+	private TextView mEmptyView;
 	private ArrayList<Group> mGroups;
 	private MyGroupsListViewAdapter mAdapter;
 	private GroupsHelper groupsHelper;
@@ -36,10 +38,12 @@ public class GroupsActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
         mGroups = new ArrayList<Group>();
         mAdapter = new MyGroupsListViewAdapter(this, R.layout.group_row, mGroups);
         groupsHelper = new GroupsHelper(this);
         setListAdapter(mAdapter);
+        getListView().setEmptyView(mEmptyView);
         registerForContextMenu(getListView());
         fillData();
     }

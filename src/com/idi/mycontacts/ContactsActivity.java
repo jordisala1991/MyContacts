@@ -20,7 +20,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
+
 import com.idi.adapters.MyContactsListViewAdapter;
 import com.idi.adapters.MyDialogDeleteContactFromList;
 import com.idi.adapters.MyTextWatcher;
@@ -31,6 +32,7 @@ import com.idi.database.ContactsHelper;
 public class ContactsActivity extends ListActivity
 {
 	
+	private TextView mEmptyView;
 	private EditText mSearch;
 	private LinearLayout mSearchLayout;
 	private ArrayList<Item> mContacts;
@@ -45,6 +47,7 @@ public class ContactsActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
         mSearch = (EditText) findViewById(R.id.search);
         mSearchLayout = (LinearLayout) findViewById(R.id.SearchLayout);
         mSearchLayout.setBackgroundColor(Color.LTGRAY);
@@ -52,6 +55,7 @@ public class ContactsActivity extends ListActivity
         mAdapter = new MyContactsListViewAdapter(this, R.layout.contact_row, mContacts);
         contactsHelper = new ContactsHelper(this);
         setListAdapter(mAdapter);
+        getListView().setEmptyView(mEmptyView);
         registerForContextMenu(getListView());
     }
     
@@ -101,12 +105,6 @@ public class ContactsActivity extends ListActivity
 	            intent.setType(Contacts.CONTENT_TYPE);
 	            startActivityForResult(intent, INSERT_CONTACT);
 	            return true;
-	        case R.id.ContactsOpt2:
-	        	Toast.makeText(this, item.getTitle(), Toast.LENGTH_LONG).show();
-	            return true;
-	        case R.id.ContactsOpt3:
-	        	Toast.makeText(this, item.getTitle(), Toast.LENGTH_LONG).show();
-	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -132,7 +130,9 @@ public class ContactsActivity extends ListActivity
 	    switch (item.getItemId())
 	    {
 	        case R.id.ContactsClickOpt1:
-	        	Toast.makeText(this, item.getTitle(), Toast.LENGTH_LONG).show();
+				Intent callIntent = new Intent(Intent.ACTION_CALL);
+				callIntent.setData(Uri.parse("tel:" + contact.getPhones().get(0).getKey()));
+				startActivity(callIntent);
 	            return true;
 	        case R.id.ContactsClickOpt2:
 	            Intent intent = new Intent(Intent.ACTION_EDIT);
