@@ -36,7 +36,7 @@ public class FavouritesActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.favourites);
-        mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewFavourites);
         mContacts = new ArrayList<Contact>();
         mAdapter = new MyFavouritesListViewAdapter(this, R.layout.contact_row, mContacts);
         contactsHelper = new ContactsHelper(this);
@@ -121,8 +121,6 @@ public class FavouritesActivity extends ListActivity
 		switch (requestCode)
 		{
 			case MODIFY_CONTACT:
-				if (resultCode == -1) fillData();
-				break;
 			case DETAILS_CONTACT:
 				if (resultCode == -1) fillData();
 				break;

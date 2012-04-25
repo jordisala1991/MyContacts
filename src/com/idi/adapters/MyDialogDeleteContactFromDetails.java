@@ -11,7 +11,6 @@ public class MyDialogDeleteContactFromDetails implements OnClickListener
 
 	private ContactDetailsActivity contactsDetailsActivity;
 	private Contact contact;
-	private static final int DELETED = -1;
 
 	public MyDialogDeleteContactFromDetails(ContactDetailsActivity contactDetailsActivity, Contact contact)
 	{
@@ -22,7 +21,7 @@ public class MyDialogDeleteContactFromDetails implements OnClickListener
 	public void onClick(DialogInterface arg0, int arg1)
 	{
 		contactsDetailsActivity.getContentResolver().delete(RawContacts.CONTENT_URI, RawContacts._ID+"=?", new String[] { String.valueOf(contact.getId())});
-		contactsDetailsActivity.setResult(DELETED);
+		contactsDetailsActivity.setResult(ContactDetailsActivity.MODIFIED_RESULT);
 		contactsDetailsActivity.finish();
 	}
 

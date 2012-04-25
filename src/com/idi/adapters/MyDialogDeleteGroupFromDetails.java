@@ -11,7 +11,6 @@ public class MyDialogDeleteGroupFromDetails implements OnClickListener
 
 	private GroupDetailsActivity groupDetailsActivity;
 	private Group group;
-	private static final int DELETED = -1;
 
 	public MyDialogDeleteGroupFromDetails(GroupDetailsActivity groupDetailsActivity, Group group)
 	{
@@ -22,7 +21,7 @@ public class MyDialogDeleteGroupFromDetails implements OnClickListener
 	public void onClick(DialogInterface arg0, int arg1)
 	{
 		groupDetailsActivity.getContentResolver().delete(Groups.CONTENT_URI, Groups._ID+"=?", new String[] { String.valueOf(group.getId())});
-		groupDetailsActivity.setResult(DELETED);
+		groupDetailsActivity.setResult(GroupDetailsActivity.MODIFIED_RESULT);
 		groupDetailsActivity.finish();
 	}
 

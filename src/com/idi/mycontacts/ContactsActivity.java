@@ -161,11 +161,7 @@ public class ContactsActivity extends ListActivity
 		switch (requestCode)
 		{
 			case INSERT_CONTACT:
-				if (resultCode == -1) fillData();
-				break;
 			case MODIFY_CONTACT:
-				if (resultCode == -1) fillData();
-				break;
 			case DETAILS_CONTACT:
 				if (resultCode == -1) fillData();
 				break;

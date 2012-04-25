@@ -14,8 +14,9 @@ public class GroupDetailsActivity extends Activity
 {
 	
 	private Group group;
-	private static final int MODIFY_GROUP = 1;
+	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
+	private static final int MODIFY_GROUP = 1;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -72,7 +73,8 @@ public class GroupDetailsActivity extends Activity
 			case MODIFY_GROUP:
 				if (resultCode == -1)
 				{
-					
+					setResult(MODIFIED_RESULT);
+					finish();
 				}
 				break;
 			default:

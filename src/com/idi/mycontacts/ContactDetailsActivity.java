@@ -1,7 +1,11 @@
 package com.idi.mycontacts;
 
+import java.util.ArrayList;
+
 import com.idi.adapters.MyDialogDeleteContactFromDetails;
 import com.idi.classes.Contact;
+import com.idi.classes.Pair;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,14 +15,21 @@ import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ContactDetailsActivity extends Activity
 {
 	
 	private Contact contact;
-	private static final int MODIFY_CONTACT = 1;
+	private ImageView photoContact;
+	private TextView nameContact;
+	private TextView phonesContact;
+	private TextView mailsContact;
+	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
-	
+	private static final int MODIFY_CONTACT = 1;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -27,12 +38,47 @@ public class ContactDetailsActivity extends Activity
         setResult(DEFAULT_RESULT);
         Bundle extras = getIntent().getExtras();
         if (extras != null) contact = (Contact) extras.getParcelable("contact");
+        photoContact = (ImageView) findViewById(R.id.fotoContacteDetall);
+        nameContact = (TextView) findViewById(R.id.nomContacteDetall);
+        phonesContact = (TextView) findViewById(R.id.telefonsContacteDetall);
+        mailsContact = (TextView) findViewById(R.id.emailsContacteDetall);
         fillData();
     }
     
 	private void fillData()
 	{
-		
+		photoContact.setImageBitmap(contact.getPhoto());
+		nameContact.setText(contact.getName());
+		phonesContact.setText(getPhonesFromContact());
+		mailsContact.setText(getMailsFromContact());
+	}
+
+	private String getPhonesFromContact()
+	{
+		String res = "";
+		if (contact.getHasPhoneNumber())
+		{
+			ArrayList< Pair<String, Integer>> phones = contact.getPhones();
+			for (int i = 0; i < phones.size(); ++i)
+			{
+				res += phones.get(i).getKey()+"\n";
+			}
+		}
+		return res;
+	}
+
+	private String getMailsFromContact()
+	{
+		String res = "";
+		if (contact.getHasEmailAddress())
+		{
+			ArrayList< Pair<String, Integer>> emails = contact.getEmails();
+			for (int i = 0; i < emails.size(); ++i)
+			{
+				res += emails.get(i).getKey()+"\n";
+			}
+		}
+		return res;
 	}
 
 	@Override
@@ -77,7 +123,8 @@ public class ContactDetailsActivity extends Activity
 			case MODIFY_CONTACT:
 				if (resultCode == -1)
 				{
-					
+					setResult(MODIFIED_RESULT);
+					finish();
 				}
 				break;
 			default:

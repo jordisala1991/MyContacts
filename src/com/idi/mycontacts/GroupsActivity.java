@@ -38,7 +38,7 @@ public class GroupsActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groups);
-        mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewGroups);
         mGroups = new ArrayList<Group>();
         mAdapter = new MyGroupsListViewAdapter(this, R.layout.group_row, mGroups);
         groupsHelper = new GroupsHelper(this);
@@ -133,11 +133,7 @@ public class GroupsActivity extends ListActivity
 		switch (requestCode)
 		{
 			case INSERT_GROUP:
-				if (resultCode == -1) fillData();
-				break;
 			case MODIFY_GROUP:
-				if (resultCode == -1) fillData();
-				break;
 			case DETAILS_GROUP:
 				if (resultCode == -1) fillData();
 				break;
