@@ -17,6 +17,7 @@
 	<string name="contactsclick_edit">Editar contacte</string>
 	<string name="contactsclick_remove">Esborrar contacte</string>
 	<string name="contactsmenu_add">Afegir contacte</string>
+	<string name="contactsmenu_about">Sobre</string>
 	<string name="contactsmenu_see">Veure</string>
 	<string name="contactsmenu_settings">Opcions</string>
 	<string name="contactdetailsmenu_edit">Editar</string>

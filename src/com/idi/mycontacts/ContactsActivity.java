@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.idi.adapters.MyContactsListViewAdapter;
 import com.idi.adapters.MyDialogDeleteContactFromList;
@@ -105,6 +106,10 @@ public class ContactsActivity extends ListActivity
 	            intent.setType(Contacts.CONTENT_TYPE);
 	            startActivityForResult(intent, INSERT_CONTACT);
 	            return true;
+	        case R.id.ContactsOpt2:
+	        	Toast toast = Toast.makeText(getBaseContext(), "Autor: Jordi Sala Morales\nGrup: 12", 10);
+	        	toast.show();
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
