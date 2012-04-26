@@ -67,6 +67,13 @@ public class ContactsHelper
 		Collections.sort(contacts);
 		return contacts;
 	}
+	
+	public String getContactName(int contactId) {
+		String[] projection = new String[] { Contacts._ID, Contacts.DISPLAY_NAME };
+		Cursor cursorContacts = contentResolver.query(Contacts.CONTENT_URI, projection, Contacts._ID + " = " + contactId, null, Contacts._ID + " ASC");
+		cursorContacts.moveToFirst();
+		return cursorContacts.getString(cursorContacts.getColumnIndex(Contacts.DISPLAY_NAME));
+	}
 
 	private void getContactsId()
 	{

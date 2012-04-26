@@ -110,8 +110,6 @@ public class GroupsActivity extends ListActivity
 	    switch (item.getItemId())
 	    {
 	        case R.id.GroupsClickOpt1:
-	            return true;
-	        case R.id.GroupsClickOpt2:
 	        	AlertDialog.Builder deleteBuilderDialog = new AlertDialog.Builder(this);
 	        	deleteBuilderDialog.setTitle(R.string.delete_group_dialog_title);
 	        	deleteBuilderDialog.setIcon(R.drawable.dialog_icon);

@@ -31,4 +31,5 @@
 	<string name="emptyGroups">\nNo tens cap grup per mostrar\nPer afegir-ne un:\n\n<ul><li>Clica sobre el botó de <b>menú</b></li>\n\n<li>Selecciona la opció <b>Afegir grup</b></li>\n\n<li>Omple les dades del grup i prem <b>Guardar</b></li></ul></string>
 	<string name="telf_contacte_detall"><b>Teléfons:</b></string>
 	<string name="mail_contacte_detall"><b>Emails:</b></string>
+	<string name="contactes_grup_detall"><b>Contactes del grup:</b></string>
 </resources>

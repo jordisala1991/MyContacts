@@ -1,22 +1,29 @@
 package com.idi.mycontacts;
 
+import java.util.ArrayList;
+
 import com.idi.adapters.MyDialogDeleteGroupFromDetails;
 import com.idi.classes.Group;
+import com.idi.database.GroupsHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class GroupDetailsActivity extends Activity
 {
 	
 	private Group group;
+	private ImageView photoGroup;
+	private TextView nameGroup;
+	private TextView contactsGroup;
+	private GroupsHelper groupsHelper;
 	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
-	private static final int MODIFY_GROUP = 1;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -26,12 +33,26 @@ public class GroupDetailsActivity extends Activity
         setResult(DEFAULT_RESULT);
         Bundle extras = getIntent().getExtras();
         if (extras != null) group = (Group) extras.getParcelable("group");
+        photoGroup = (ImageView) findViewById(R.id.fotoGrupDetall);
+        nameGroup = (TextView) findViewById(R.id.nomGrupDetall);
+        contactsGroup = (TextView) findViewById(R.id.contactesGrupDetall);
+        groupsHelper = new GroupsHelper(this);
         fillData();
     }
     
 	private void fillData()
 	{
-		
+		photoGroup.setImageBitmap(group.getPhoto());
+		nameGroup.setText(group.getName());
+		contactsGroup.setText(getContactsFromGroup());
+	}
+
+	private String getContactsFromGroup()
+	{
+		String res = "";
+		ArrayList<String> contactsFromGroup = groupsHelper.getContactsNamesFromGroup(group.getId());
+		for (int i = 0; i < contactsFromGroup.size(); ++i) res += contactsFromGroup.get(i) + "\n";
+		return res;
 	}
 
 	@Override
@@ -48,8 +69,6 @@ public class GroupDetailsActivity extends Activity
 	    switch (item.getItemId())
 	    {
 	        case R.id.GroupDetailsOpt1:
-	            return true;
-	        case R.id.GroupDetailsOpt2:
 	        	AlertDialog.Builder deleteBuilderDialog = new AlertDialog.Builder(this);
 	        	deleteBuilderDialog.setTitle(R.string.delete_group_dialog_title);
 	        	deleteBuilderDialog.setIcon(R.drawable.dialog_icon);
@@ -64,24 +83,5 @@ public class GroupDetailsActivity extends Activity
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
-	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		switch (requestCode)
-		{
-			case MODIFY_GROUP:
-				if (resultCode == -1)
-				{
-					setResult(MODIFIED_RESULT);
-					finish();
-				}
-				break;
-			default:
-				super.onActivityResult(requestCode, resultCode, data);
-				break;
-				
-		}
-    }
 
 }

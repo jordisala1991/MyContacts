@@ -9,23 +9,27 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
+import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Groups;
 
 public class GroupsHelper
 {
 	
+	private ContactsHelper contactsHelper;
 	private ContentResolver contentResolver;
 	private Resources resources;
 	
 	public GroupsHelper(Context context)
 	{
+		contactsHelper = new ContactsHelper(context);
 		this.contentResolver = context.getContentResolver();
 		this.resources = context.getResources();
 	}
 
 	public ArrayList<Group> getItemsViewAllGroups() {
 		ArrayList<Group> groups = new ArrayList<Group>();
-		final String[] projection = new String[] { Groups._ID, Groups.TITLE, Groups.DELETED };
+		String[] projection = new String[] { Groups._ID, Groups.TITLE, Groups.DELETED };
 		Cursor cursorGroups = contentResolver.query(Groups.CONTENT_URI, projection, null, null, Groups.TITLE + " ASC");
 		int groupIdColumn = cursorGroups.getColumnIndex(Groups._ID);
 		int groupNameColumn = cursorGroups.getColumnIndex(Groups.TITLE);
@@ -44,5 +48,20 @@ public class GroupsHelper
 		cursorGroups.close();
 		return groups;
 	}
+
+	public ArrayList<String> getContactsNamesFromGroup(int id) {
+		ArrayList<String> res = new ArrayList<String>();
+	    String[] projection = new String[] { GroupMembership.GROUP_ROW_ID , GroupMembership.CONTACT_ID };
+	    Cursor cursorContacts = contentResolver.query(Data.CONTENT_URI, projection, GroupMembership.GROUP_ROW_ID + " = " + id, null, null);
+	    int contactIdColumn = cursorContacts.getColumnIndex(GroupMembership.CONTACT_ID);
+	    for (cursorContacts.moveToFirst(); !cursorContacts.isAfterLast(); cursorContacts.moveToNext())
+	    {
+	    	int contactId = cursorContacts.getInt(contactIdColumn);
+	    	res.add(contactsHelper.getContactName(contactId));
+	    }
+		return res;
+	}
+	
+	
 
 }
