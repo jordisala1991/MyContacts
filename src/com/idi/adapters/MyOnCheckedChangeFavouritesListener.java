@@ -19,7 +19,6 @@ public class MyOnCheckedChangeFavouritesListener implements OnCheckedChangeListe
 		this.db = new MyDbController(context);
 	}
 
-	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
 		db.open();

@@ -57,7 +57,6 @@ public class Group implements Comparable<Group>, Parcelable {
 		this.photo = photo;
 	}
 
-	@Override
 	public int compareTo(Group aux)
 	{
 		return getName().compareToIgnoreCase(aux.getName());

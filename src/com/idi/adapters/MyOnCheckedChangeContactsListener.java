@@ -19,7 +19,6 @@ public class MyOnCheckedChangeContactsListener implements OnCheckedChangeListene
 		this.db = new MyDbController(context);
 	}
 
-	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
 		db.open();
