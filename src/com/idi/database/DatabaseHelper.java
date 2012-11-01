@@ -19,12 +19,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase database)
 	{
 		FavouritesTable.onCreate(database);
+		GroupsTable.onCreate(database);
+		GroupContactsTable.onCreate(database);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion)
 	{
 		FavouritesTable.onUpgrade(database, oldVersion, newVersion);
+		GroupsTable.onUpgrade(database, oldVersion, newVersion);
+		GroupContactsTable.onUpgrade(database, oldVersion, newVersion);
 	}
 
 }

@@ -53,6 +53,19 @@ public class ContactsHelper
 		return res;
 	}
 	
+	public ArrayList<Contact> getItemsViewAllContactsForCreateGroup()
+	{
+		contacts = new ArrayList<Contact>();
+		getContactsId();
+		getContactsName();
+		getPhotos();
+		getPhones();
+		getEmails();
+		deleteFakeContacts();
+		Collections.sort(contacts);
+		return contacts;
+	}
+	
 	public ArrayList<Contact> getItemsViewFavourites()
 	{
 		contacts = new ArrayList<Contact>();
@@ -68,6 +81,19 @@ public class ContactsHelper
 		return contacts;
 	}
 	
+	public ArrayList<Contact> getItemsViewGroupDetails(ArrayList<Integer> contactsId) {
+		contacts = new ArrayList<Contact>();
+		getContactsId();
+		deleteNonGroupContacts(contactsId);
+		getContactsName();
+		getPhotos();
+		getPhones();
+		getEmails();
+		deleteFakeContacts();
+		Collections.sort(contacts);
+		return contacts;
+	}
+
 	public String getContactName(int contactId) {
 		String[] projection = new String[] { Contacts._ID, Contacts.DISPLAY_NAME };
 		Cursor cursorContacts = contentResolver.query(Contacts.CONTENT_URI, projection, Contacts._ID + " = " + contactId, null, Contacts._ID + " ASC");
@@ -225,7 +251,7 @@ public class ContactsHelper
 	{
 		db.open();
 		Cursor favourites = db.fetchFavourites();
-		int contactIdColumnIndex = favourites.getColumnIndex(MyDbController.KEY_IDCONTACT);
+		int contactIdColumnIndex = favourites.getColumnIndex(MyDbController.KEY_CONTACTID);
 		int contactsIndex = 0;
 		for (favourites.moveToFirst(); !favourites.isAfterLast(); favourites.moveToNext())
 		{
@@ -277,6 +303,15 @@ public class ContactsHelper
 		while (i < contacts.size())
 		{
 			if (!contacts.get(i).getIsFavourite()) contacts.remove(i);
+			else ++i;
+		}
+	}
+	
+	private void deleteNonGroupContacts(ArrayList<Integer> contactsId) {
+		int i = 0;
+		while (i < contacts.size())
+		{
+			if (!contactsId.contains(contacts.get(i).getId())) contacts.remove(i);
 			else ++i;
 		}
 	}

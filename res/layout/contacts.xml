@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:layout_weight="1"
+            android:maxLines="1"
             android:hint="@string/search" 
             android:drawableRight="@drawable/icon_search" >
         </EditText>

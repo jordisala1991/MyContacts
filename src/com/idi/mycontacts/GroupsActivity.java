@@ -10,7 +10,6 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract.Groups;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,9 +81,8 @@ public class GroupsActivity extends ListActivity
 	    switch (item.getItemId())
 	    {
 	        case R.id.GroupsOpt1:
-	            Intent intent = new Intent(Intent.ACTION_INSERT);
-	            intent.setType(Groups.CONTENT_TYPE);
-	            startActivityForResult(intent, INSERT_GROUP);
+	        	Intent intent = new Intent(getBaseContext(), CreateGroupActivity.class);
+	        	startActivityForResult(intent, INSERT_GROUP);
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);

@@ -1,29 +1,41 @@
 package com.idi.mycontacts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.idi.adapters.MyDialogDeleteGroupFromDetails;
+import com.idi.adapters.MyGroupContactsListViewAdapter;
+import com.idi.classes.Contact;
 import com.idi.classes.Group;
+import com.idi.database.ContactsHelper;
 import com.idi.database.GroupsHelper;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class GroupDetailsActivity extends Activity
+public class GroupDetailsActivity extends ListActivity
 {
 	
+	private TextView mEmptyView;
+	private ArrayList<Contact> mContacts;
+    private MyGroupContactsListViewAdapter mAdapter;
+    private ContactsHelper contactsHelper;
 	private Group group;
 	private ImageView photoGroup;
 	private TextView nameGroup;
-	private TextView contactsGroup;
 	private GroupsHelper groupsHelper;
 	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
+	private static final int MODIFY_CONTACT = 1;
+	private static final int DETAILS_CONTACT = 2;
 	
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -35,25 +47,46 @@ public class GroupDetailsActivity extends Activity
         if (extras != null) group = (Group) extras.getParcelable("group");
         photoGroup = (ImageView) findViewById(R.id.fotoGrupDetall);
         nameGroup = (TextView) findViewById(R.id.nomGrupDetall);
-        contactsGroup = (TextView) findViewById(R.id.contactesGrupDetall);
+        mEmptyView = (TextView) findViewById(R.id.emptyViewFavourites);
+        mContacts = new ArrayList<Contact>();
+        mAdapter = new MyGroupContactsListViewAdapter(this, R.layout.contact_row, mContacts);
+        contactsHelper = new ContactsHelper(this);
         groupsHelper = new GroupsHelper(this);
+        setListAdapter(mAdapter);
+        getListView().setEmptyView(mEmptyView);
+        registerForContextMenu(getListView());
         fillData();
+    }
+    
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
+    	fillData();
     }
     
 	private void fillData()
 	{
 		photoGroup.setImageBitmap(group.getPhoto());
 		nameGroup.setText(group.getName());
-		contactsGroup.setText(getContactsFromGroup());
+		ArrayList<Integer> contactsId = groupsHelper.getContactsNamesFromGroup(group.getId());
+		mContacts = contactsHelper.getItemsViewGroupDetails(contactsId);
+    	Collections.sort(mContacts);
+    	mAdapter.clear();
+    	for (int i = 0; i < mContacts.size(); ++i) mAdapter.add(mContacts.get(i));
+    	mAdapter.notifyDataSetChanged();
 	}
-
-	private String getContactsFromGroup()
-	{
-		String res = "";
-		ArrayList<String> contactsFromGroup = groupsHelper.getContactsNamesFromGroup(group.getId());
-		for (int i = 0; i < contactsFromGroup.size(); ++i) res += contactsFromGroup.get(i) + "\n";
-		return res;
-	}
+	
+	@Override
+    protected void onListItemClick(ListView listView, View view, int position, long id)
+    {
+        Contact contact = (Contact) listView.getItemAtPosition(position);        
+        Bundle extras = new Bundle();
+        extras.putParcelable("contact", contact);
+        Intent intent = new Intent(getBaseContext(), ContactDetailsActivity.class);
+        intent.putExtras(extras);
+        startActivityForResult(intent, DETAILS_CONTACT);  
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -83,5 +116,21 @@ public class GroupDetailsActivity extends Activity
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		switch (requestCode)
+		{
+			case MODIFY_CONTACT:
+			case DETAILS_CONTACT:
+				if (resultCode == -1) fillData();
+				break;
+			default:
+				super.onActivityResult(requestCode, resultCode, data);
+				break;
+				
+		}
+    }
 
 }

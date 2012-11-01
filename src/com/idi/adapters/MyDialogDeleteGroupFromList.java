@@ -2,25 +2,29 @@ package com.idi.adapters;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.provider.ContactsContract.Groups;
 import com.idi.classes.Group;
+import com.idi.database.MyDbController;
 import com.idi.mycontacts.GroupsActivity;
 
 public class MyDialogDeleteGroupFromList implements OnClickListener
 {	
 
-	private GroupsActivity groupsActivity;
 	private Group group;
+	private GroupsActivity groupsActivity;
+	private MyDbController db;
 
 	public MyDialogDeleteGroupFromList(GroupsActivity groupsActivity, Group group)
 	{
 		this.groupsActivity = groupsActivity;
 		this.group = group;
+		db = new MyDbController(groupsActivity);
 	}
 
 	public void onClick(DialogInterface arg0, int arg1)
 	{
-		groupsActivity.getContentResolver().delete(Groups.CONTENT_URI, Groups._ID+"=?", new String[] { String.valueOf(group.getId())});
+		db.open();
+		db.deleteGroup(this.group.getId());
+		db.close();
 		groupsActivity.fillData();
 	}
 

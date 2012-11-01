@@ -22,5 +22,7 @@
         <activity android:name=".GroupsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
         <activity android:name=".GroupDetailsActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
         <activity android:name=".FavouritesActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".CreateGroupActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".EditGroupActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
     </application>
 </manifest>

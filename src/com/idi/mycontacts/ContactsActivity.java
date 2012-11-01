@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.idi.adapters.MyContactsListViewAdapter;
 import com.idi.adapters.MyDialogDeleteContactFromList;
 import com.idi.adapters.MyTextWatcher;
@@ -51,7 +50,7 @@ public class ContactsActivity extends ListActivity
         mEmptyView = (TextView) findViewById(R.id.emptyViewContacts);
         mSearch = (EditText) findViewById(R.id.search);
         mSearchLayout = (LinearLayout) findViewById(R.id.SearchLayout);
-        mSearchLayout.setBackgroundColor(Color.LTGRAY);
+        mSearchLayout.setBackgroundColor(Color.LTGRAY);  
         mContacts = new ArrayList<Item>();
         mAdapter = new MyContactsListViewAdapter(this, R.layout.contact_row, mContacts);
         contactsHelper = new ContactsHelper(this);
@@ -107,7 +106,7 @@ public class ContactsActivity extends ListActivity
 	            startActivityForResult(intent, INSERT_CONTACT);
 	            return true;
 	        case R.id.ContactsOpt2:
-	        	Toast toast = Toast.makeText(getBaseContext(), "Autor: Jordi Sala Morales\nGrup: 12", 10);
+	        	Toast toast = Toast.makeText(getBaseContext(), "Autor: Jordi Sala Morales\nGrup: 23", Toast.LENGTH_LONG);
 	        	toast.show();
 	        	return true;
 	        default:
