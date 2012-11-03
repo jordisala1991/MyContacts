@@ -26,7 +26,7 @@ public class MyDialogDeleteContactFromDetails implements OnClickListener
 		contactsDetailsActivity.getContentResolver().delete(RawContacts.CONTENT_URI, RawContacts._ID+"=?", new String[] { String.valueOf(contact.getId())});
 		contactsDetailsActivity.setResult(ContactDetailsActivity.MODIFIED_RESULT);
 		db.open();
-		db.deleteContactRelations(contact.getId());
+		db.deleteGroupContactRelation(contact.getId());
 		db.close();
 		contactsDetailsActivity.finish();
 	}

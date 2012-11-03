@@ -33,13 +33,13 @@ public class GroupsHelper
 		{
 			int groupId = groupsCursor.getInt(groupIdColumnIndex);
 			String groupName = groupsCursor.getString(groupNameColumnIndex);
-			groups.add(new Group(groupId, groupName, photo));
+			groups.add(new Group(groupId, groupName, photo, getContactsIdFromGroup(groupId)));
 		}
 		db.close();
 		return groups;
 	}
 
-	public ArrayList<Integer> getContactsNamesFromGroup(int id) {
+	public ArrayList<Integer> getContactsIdFromGroup(int id) {
 		db.open();
 		ArrayList<Integer> groupContacts = new ArrayList<Integer>();
 		Cursor groupContactsCursor = db.fetchGroupContacts(id);
@@ -59,6 +59,12 @@ public class GroupsHelper
 		int idGroup = (int) db.addGroup(groupName);
 		for (int i = 0; i < contacts.size(); ++i)
 			db.addContactToGroup(idGroup, contacts.get(i).getId(), i);
+		db.close();
+	}
+
+	public void editGroup(int id, String name, ArrayList<Contact> contactsAddedToGroup) {
+		db.open();
+		db.updateGroup(id, name, contactsAddedToGroup);
 		db.close();
 	}
 

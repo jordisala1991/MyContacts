@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import com.idi.adapters.MyGroupContactsListViewAdapter;
 import com.idi.classes.Contact;
+import com.idi.classes.Group;
 import com.idi.database.ContactsHelper;
 import com.idi.database.GroupsHelper;
 import android.app.ListActivity;
@@ -29,6 +30,7 @@ public class EditGroupActivity extends ListActivity implements OnClickListener
     private Button mButtonCancel;
     private Button mButtonSave;
     private EditText mGroupNameTextEdit;
+    private Group group;
 	
 	private static final int DEFAULT_RESULT = 0;
 	private static final int SAVED_RESULT = -1;
@@ -52,6 +54,8 @@ public class EditGroupActivity extends ListActivity implements OnClickListener
         mAdapter = new MyGroupContactsListViewAdapter(this, R.layout.contact_row, mContacts);
         contactsHelper = new ContactsHelper(this);
         groupsHelper = new GroupsHelper(this);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) group = (Group) extras.getParcelable("group");
         setResult(DEFAULT_RESULT);
         setListAdapter(mAdapter);
         getListView().setEmptyView(mEmptyView);
@@ -60,8 +64,16 @@ public class EditGroupActivity extends ListActivity implements OnClickListener
     }
 
 	private void fillData() {
-    	mContacts = contactsHelper.getItemsViewAllContactsForCreateGroup();
+		mGroupNameTextEdit.setText(group.getName());
+		mContacts = contactsHelper.getItemsViewAllContactsForCreateGroup();
     	Collections.sort(mContacts);
+    	ArrayList<Contact> contactsOfGroup = new ArrayList<Contact>();
+    	for (int i = 0; i < mContacts.size(); ++i) {
+    		Contact contact = mContacts.get(i);
+    		if (group.containsContact(contact.getId()))
+    			contactsOfGroup.add(contact);
+    	}
+    	MyGroupContactsListViewAdapter.setContactsOfGroup(contactsOfGroup);
     	mAdapter.clear();
     	for (int i = 0; i < mContacts.size(); ++i) mAdapter.add(mContacts.get(i));
     	mAdapter.notifyDataSetChanged();
@@ -72,7 +84,7 @@ public class EditGroupActivity extends ListActivity implements OnClickListener
 		{
 			case R.id.button_save:
 				setResult(SAVED_RESULT);
-				groupsHelper.createGroup(mGroupNameTextEdit.getText().toString(), MyGroupContactsListViewAdapter.getContactsAddedToGroup());
+				groupsHelper.editGroup(group.getId(), mGroupNameTextEdit.getText().toString(), MyGroupContactsListViewAdapter.getContactsAddedToGroup());
 				finish();
 				break;
 			case R.id.button_cancel:

@@ -67,6 +67,11 @@ public class MyGroupContactsListViewAdapter extends ArrayAdapter<Contact>
     {
     	return contactsOfGroup;
     }
+    
+    public static void setContactsOfGroup(ArrayList<Contact> contacts)
+    {
+    	contactsOfGroup = contacts;
+    }
 
 	private class ViewHolder
 	{

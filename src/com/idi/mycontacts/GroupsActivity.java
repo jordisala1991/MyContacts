@@ -107,7 +107,14 @@ public class GroupsActivity extends ListActivity
 		Group group = (Group) getListView().getAdapter().getItem(info.position);
 	    switch (item.getItemId())
 	    {
-	        case R.id.GroupsClickOpt1:
+	    	case R.id.GroupsClickOpt1:
+	            Bundle extras = new Bundle();
+	            extras.putParcelable("group", group);
+	            Intent intent = new Intent(getBaseContext(), EditGroupActivity.class);
+	            intent.putExtras(extras);
+	            startActivityForResult(intent, MODIFY_GROUP);
+	            return true;
+	        case R.id.GroupsClickOpt2:
 	        	AlertDialog.Builder deleteBuilderDialog = new AlertDialog.Builder(this);
 	        	deleteBuilderDialog.setTitle(R.string.delete_group_dialog_title);
 	        	deleteBuilderDialog.setIcon(R.drawable.dialog_icon);

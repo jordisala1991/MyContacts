@@ -1,5 +1,9 @@
 package com.idi.database;
 
+import java.util.ArrayList;
+
+import com.idi.classes.Contact;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -68,6 +72,15 @@ public class MyDbController
 		return db.insert(GROUPS_TABLE, null, values);
 	}
 	
+	public boolean updateGroup(int groupId, String name, ArrayList<Contact> contactsAddedToGroup)
+	{
+		ContentValues values = createGroupValues(name);
+		boolean groupEditResult = db.update(GROUPS_TABLE, values, KEY_ROWID + "=" + groupId, null) > 0;
+		deleteGroupContactsRelations(groupId);
+		for (int i = 0; i < contactsAddedToGroup.size(); ++i) addContactToGroup(groupId, contactsAddedToGroup.get(i).getId(), i);
+		return groupEditResult;
+	}
+	
 	public boolean deleteGroup(int groupId)
 	{
 		return db.delete(GROUPS_TABLE, KEY_ROWID + "=" + groupId, null) > 0;
@@ -84,9 +97,14 @@ public class MyDbController
 		return db.insert(GROUPCONTACTS_TABLE, null, values);
 	}
 	
-	public boolean deleteContactRelations(int contactId)
+	public boolean deleteGroupContactRelation(int contactId)
 	{
 		return db.delete(GROUPCONTACTS_TABLE, KEY_CONTACTID + "=" + contactId, null) > 0;
+	}
+	
+	public boolean deleteGroupContactsRelations(int groupId)
+	{
+		return db.delete(GROUPCONTACTS_TABLE, KEY_GROUPID + "=" + groupId, null) > 0;
 	}
 	
 	public Cursor fetchGroupContacts(int groupId)

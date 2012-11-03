@@ -69,7 +69,7 @@ public class GroupDetailsActivity extends ListActivity
 	{
 		photoGroup.setImageBitmap(group.getPhoto());
 		nameGroup.setText(group.getName());
-		ArrayList<Integer> contactsId = groupsHelper.getContactsNamesFromGroup(group.getId());
+		ArrayList<Integer> contactsId = groupsHelper.getContactsIdFromGroup(group.getId());
 		mContacts = contactsHelper.getItemsViewGroupDetails(contactsId);
     	Collections.sort(mContacts);
     	mAdapter.clear();
