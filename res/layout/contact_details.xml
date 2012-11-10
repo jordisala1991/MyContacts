@@ -35,12 +35,13 @@
         
         android:text="@string/telf_contacte_detall"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/telefonsContacteDetall"
-        android:layout_width="wrap_content"
+    
+    <LinearLayout
+        android:id="@+id/llistaTelefons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
+   	</LinearLayout>
 
     <TextView
         android:id="@+id/emailsTagContacteDetall"
@@ -50,10 +51,11 @@
         android:text="@string/mail_contacte_detall"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/emailsContacteDetall"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llistaEmails"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
+   	</LinearLayout>
 
 </LinearLayout>

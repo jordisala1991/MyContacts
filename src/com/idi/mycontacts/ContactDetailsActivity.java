@@ -15,7 +15,10 @@ import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ContactDetailsActivity extends Activity
@@ -24,8 +27,8 @@ public class ContactDetailsActivity extends Activity
 	private Contact contact;
 	private ImageView photoContact;
 	private TextView nameContact;
-	private TextView phonesContact;
-	private TextView mailsContact;
+	private LinearLayout listPhones;
+	private LinearLayout listEmails;
 	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
 	private static final int MODIFY_CONTACT = 1;
@@ -40,8 +43,8 @@ public class ContactDetailsActivity extends Activity
         if (extras != null) contact = (Contact) extras.getParcelable("contact");
         photoContact = (ImageView) findViewById(R.id.fotoContacteDetall);
         nameContact = (TextView) findViewById(R.id.nomContacteDetall);
-        phonesContact = (TextView) findViewById(R.id.telefonsContacteDetall);
-        mailsContact = (TextView) findViewById(R.id.emailsContacteDetall);
+        listPhones = (LinearLayout) findViewById(R.id.llistaTelefons);
+        listEmails = (LinearLayout) findViewById(R.id.llistaEmails);
         fillData();
     }
     
@@ -49,36 +52,49 @@ public class ContactDetailsActivity extends Activity
 	{
 		photoContact.setImageBitmap(contact.getPhoto());
 		nameContact.setText(contact.getName());
-		phonesContact.setText(getPhonesFromContact());
-		mailsContact.setText(getMailsFromContact());
+		fillPhones();
+		fillEmails();
 	}
 
-	private String getPhonesFromContact()
-	{
-		String res = "";
-		if (contact.getHasPhoneNumber())
+	private void fillEmails() {
+		ArrayList< Pair<String, Integer>> emails = contact.getEmails();
+		for (int i = 0; i < emails.size(); ++i)
 		{
-			ArrayList< Pair<String, Integer>> phones = contact.getPhones();
-			for (int i = 0; i < phones.size(); ++i)
-			{
-				res += phones.get(i).getKey()+"\n";
-			}
+			TextView email = new TextView(this);
+			final String emailAddress = emails.get(i).getKey();
+			email.setText(emailAddress);
+			listEmails.addView(email);
+			email.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_SEND);
+					intent.setType("plain/text");
+					intent.putExtra(Intent.EXTRA_EMAIL, new String[] { emailAddress });
+					startActivity(Intent.createChooser(intent, ""));
+				}
+	        });
 		}
-		return res;
 	}
 
-	private String getMailsFromContact()
+	private void fillPhones()
 	{
-		String res = "";
-		if (contact.getHasEmailAddress())
+		ArrayList< Pair<String, Integer>> phones = contact.getPhones();
+		for (int i = 0; i < phones.size(); ++i)
 		{
-			ArrayList< Pair<String, Integer>> emails = contact.getEmails();
-			for (int i = 0; i < emails.size(); ++i)
-			{
-				res += emails.get(i).getKey()+"\n";
-			}
+			TextView phone = new TextView(this);
+			final String phoneNumber = phones.get(i).getKey();
+			phone.setText(phoneNumber);
+			listPhones.addView(phone);
+			phone.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View v) {
+					Intent callIntent = new Intent(Intent.ACTION_CALL);
+					callIntent.setData(Uri.parse("tel:" + phoneNumber));
+					startActivity(callIntent);
+				}
+	        });
 		}
-		return res;
+		
 	}
 
 	@Override
