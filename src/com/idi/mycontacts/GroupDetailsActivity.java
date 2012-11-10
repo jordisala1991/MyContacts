@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.idi.adapters.MyDialogDeleteGroupFromDetails;
-import com.idi.adapters.MyGroupContactsListViewAdapter;
+import com.idi.adapters.MyGroupContactsWithOrderListViewAdapter;
 import com.idi.classes.Contact;
 import com.idi.classes.Group;
 import com.idi.database.ContactsHelper;
@@ -26,7 +26,7 @@ public class GroupDetailsActivity extends ListActivity
 	
 	private TextView mEmptyView;
 	private ArrayList<Contact> mContacts;
-    private MyGroupContactsListViewAdapter mAdapter;
+    private MyGroupContactsWithOrderListViewAdapter mAdapter;
     private ContactsHelper contactsHelper;
 	private Group group;
 	private ImageView photoGroup;
@@ -34,7 +34,7 @@ public class GroupDetailsActivity extends ListActivity
 	private GroupsHelper groupsHelper;
 	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
-	private static final int MODIFY_CONTACT = 1;
+	private static final int MODIFY_GROUP = 1;
 	private static final int DETAILS_CONTACT = 2;
 	
     @Override
@@ -49,7 +49,7 @@ public class GroupDetailsActivity extends ListActivity
         nameGroup = (TextView) findViewById(R.id.nomGrupDetall);
         mEmptyView = (TextView) findViewById(R.id.emptyViewFavourites);
         mContacts = new ArrayList<Contact>();
-        mAdapter = new MyGroupContactsListViewAdapter(this, R.layout.contact_row, mContacts);
+        mAdapter = new MyGroupContactsWithOrderListViewAdapter(this, R.layout.contact_row_without_fav, mContacts);
         contactsHelper = new ContactsHelper(this);
         groupsHelper = new GroupsHelper(this);
         setListAdapter(mAdapter);
@@ -101,7 +101,14 @@ public class GroupDetailsActivity extends ListActivity
 	{
 	    switch (item.getItemId())
 	    {
-	        case R.id.GroupDetailsOpt1:
+	    	case R.id.GroupDetailsOpt1:
+	            Bundle extras = new Bundle();
+	            extras.putParcelable("group", group);
+	            Intent intent = new Intent(getBaseContext(), EditGroupActivity.class);
+	            intent.putExtras(extras);
+	            startActivityForResult(intent, MODIFY_GROUP);
+	    		return true;
+	        case R.id.GroupDetailsOpt2:
 	        	AlertDialog.Builder deleteBuilderDialog = new AlertDialog.Builder(this);
 	        	deleteBuilderDialog.setTitle(R.string.delete_group_dialog_title);
 	        	deleteBuilderDialog.setIcon(R.drawable.dialog_icon);
@@ -122,7 +129,12 @@ public class GroupDetailsActivity extends ListActivity
 	{
 		switch (requestCode)
 		{
-			case MODIFY_CONTACT:
+			case MODIFY_GROUP:
+				if (resultCode == -1)
+				{
+					setResult(MODIFIED_RESULT);
+					finish();
+				}
 			case DETAILS_CONTACT:
 				if (resultCode == -1) fillData();
 				break;

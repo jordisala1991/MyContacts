@@ -18,8 +18,6 @@
 	<string name="contactsclick_remove">Esborra contacte</string>
 	<string name="contactsmenu_add">Afegeix contacte</string>
 	<string name="contactsmenu_about">Sobre</string>
-	<string name="contactsmenu_see">Veure</string>
-	<string name="contactsmenu_settings">Opcions</string>
 	<string name="contactdetailsmenu_edit">Edita</string>
 	<string name="contactdetailsmenu_remove">Esborra</string>
 	<string name="groupsclick_edit">Edita grup</string>

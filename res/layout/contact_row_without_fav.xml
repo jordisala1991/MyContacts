@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip" >
+
+    <ImageView
+        android:id="@+id/row_contactphoto"
+		android:contentDescription="@string/contact_photo"
+		
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="6dip"/>
+
+    <TextView
+        android:id="@+id/row_contactname"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+
+        android:layout_toRightOf="@id/row_contactphoto"
+        android:layout_alignParentRight="true"
+
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        
+        android:textSize="17dip"
+        android:textStyle="bold"/>     
+        
+    <TextView
+        android:id="@+id/row_contactphone"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+
+        android:layout_toRightOf="@id/row_contactphoto"
+        android:layout_below="@id/row_contactname"
+        android:layout_alignParentRight="true"
+
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        
+        android:textSize="15dip"
+        android:textColor="#7a7a7a"
+        android:textStyle="bold"/>
+
+</RelativeLayout>
