@@ -45,5 +45,31 @@
         android:textSize="15dip"
         android:textColor="#7a7a7a"
         android:textStyle="bold"/>
+    
+    <Button
+        android:id="@+id/button_up"
+        
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        
+        android:layout_marginTop="10dp"
+        
+        android:text="@string/up"
+        android:textSize="10dip" />
+    
+    <Button
+        android:id="@+id/button_down"
+        
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/button_up"
+        android:focusable="false"
+        
+        android:text="@string/down"
+        android:textSize="10dip" />
 
 </RelativeLayout>

@@ -102,6 +102,12 @@ public class MyDbController
 		return db.delete(GROUPCONTACTS_TABLE, KEY_CONTACTID + "=" + contactId, null) > 0;
 	}
 	
+	public boolean updateGroupContactPosition(int groupId, int contactId, int newPosition)
+	{
+		ContentValues values = createPositionValues(newPosition);
+		return db.update(GROUPCONTACTS_TABLE, values, KEY_GROUPID + "=" + groupId + " AND " + KEY_CONTACTID + "=" + contactId, null) > 0;
+	}
+
 	public boolean deleteGroupContactsRelations(int groupId)
 	{
 		return db.delete(GROUPCONTACTS_TABLE, KEY_GROUPID + "=" + groupId, null) > 0;
@@ -109,7 +115,12 @@ public class MyDbController
 	
 	public Cursor fetchGroupContacts(int groupId)
 	{
-		return db.query(GROUPCONTACTS_TABLE, new String[] { KEY_ROWID, KEY_GROUPID, KEY_CONTACTID}, KEY_GROUPID + "=" + groupId, null, null, null, KEY_CONTACTID + " ASC");
+		return db.query(GROUPCONTACTS_TABLE, new String[] { KEY_ROWID, KEY_GROUPID, KEY_CONTACTID, KEY_POSITIONINGROUP }, KEY_GROUPID + "=" + groupId, null, null, null, KEY_POSITIONINGROUP + " ASC");
+	}
+	
+	public Cursor fetchContactPosition(int groupId, int contactId)
+	{
+		return db.query(GROUPCONTACTS_TABLE, new String[] { KEY_POSITIONINGROUP }, KEY_GROUPID + "=" + groupId + " AND " + KEY_CONTACTID + "=" + contactId, null, null, null, null);
 	}
 
 	private ContentValues createGroupContactValues(int groupId, int contactId, int position) {
@@ -133,4 +144,12 @@ public class MyDbController
 		values.put(KEY_CONTACTID, contactId);
 		return values;
 	}
+	
+	private ContentValues createPositionValues(int newPosition)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_POSITIONINGROUP, newPosition);
+		return values;
+	}
+
 }

@@ -24,9 +24,14 @@
 	<string name="groupsclick_remove">Esborra grup</string>
 	<string name="groupsmenu_add">Afegeix grup</string>
 	<string name="groupdetailsmenu_edit">Edita</string>
+	<string name="groupdetails_reorder">Ordena contactes</string>
 	<string name="groupdetailsmenu_remove">Esborra</string>
 	<string name="newgroup_save">Guarda</string>
 	<string name="newgroup_cancel">Cancel·la</string>
+	<string name="up">Amunt</string>
+	<string name="down">Avall</string>
+	<string name="mode_off">Edita posicions</string>
+	<string name="mode_on">Finalitza edició</string>
 	<string name="emptyContacts">\nNo tens cap contacte per mostrar,\naixò pot ser degut a una <b>cerca</b>\nsense resultats o a la <b>falta de contactes</b>.\n\nPer afegir un contacte:\n\n<ul><li>Clica sobre el botó de <b>menú</b></li>\n\n<li>Selecciona la opció <b>Afegir contacte</b></li>\n\n<li>Omple les dades del contacte i prem <b>Guardar</b></li></ul></string>
 	<string name="emptyContactsOnCreateGroup">\nNo tens cap contacte per afegir al grup.</string>
 	<string name="emptyFavourites">\nNo tens cap favorit per mostrar\nPer afegir-ne un:\n\n<ul><li>Clica la pestanya de <b>contactes</b></li>\n\n<li>Mou-te per la <b>llista</b> de contactes</li>\n\n<li>Clica sobre la <b>estrella</b> del contacte que vulguis de favorit</li></ul></string>

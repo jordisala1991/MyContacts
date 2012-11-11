@@ -81,7 +81,8 @@ public class ContactsHelper
 		return contacts;
 	}
 	
-	public ArrayList<Contact> getItemsViewGroupDetails(ArrayList<Integer> contactsId) {
+	public ArrayList<Contact> getItemsViewGroupDetails(ArrayList<Integer> contactsId)
+	{
 		contacts = new ArrayList<Contact>();
 		getContactsId();
 		deleteNonGroupContacts(contactsId);
@@ -90,11 +91,24 @@ public class ContactsHelper
 		getPhones();
 		getEmails();
 		deleteFakeContacts();
-		Collections.sort(contacts);
+		orderContacts(contactsId);
 		return contacts;
 	}
 
-	public String getContactName(int contactId) {
+	private void orderContacts(ArrayList<Integer> contactsId)
+	{
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			int contactId = contacts.get(i).getId();
+			int position = contactsId.indexOf(contactId);
+			Contact contactToMove = contacts.get(position);
+			contacts.set(position, contacts.get(i));
+			contacts.set(i, contactToMove);
+		}
+	}
+
+	public String getContactName(int contactId)
+	{
 		String[] projection = new String[] { Contacts._ID, Contacts.DISPLAY_NAME };
 		Cursor cursorContacts = contentResolver.query(Contacts.CONTENT_URI, projection, Contacts._ID + " = " + contactId, null, Contacts._ID + " ASC");
 		cursorContacts.moveToFirst();

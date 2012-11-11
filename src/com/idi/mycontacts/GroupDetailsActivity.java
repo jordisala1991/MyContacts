@@ -1,14 +1,11 @@
 package com.idi.mycontacts;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import com.idi.adapters.MyDialogDeleteGroupFromDetails;
 import com.idi.adapters.MyGroupContactsWithOrderListViewAdapter;
 import com.idi.classes.Contact;
 import com.idi.classes.Group;
 import com.idi.database.ContactsHelper;
-import com.idi.database.GroupsHelper;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -17,11 +14,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-public class GroupDetailsActivity extends ListActivity
+public class GroupDetailsActivity extends ListActivity implements OnCheckedChangeListener
 {
 	
 	private TextView mEmptyView;
@@ -31,7 +31,7 @@ public class GroupDetailsActivity extends ListActivity
 	private Group group;
 	private ImageView photoGroup;
 	private TextView nameGroup;
-	private GroupsHelper groupsHelper;
+	private ToggleButton mModeButton;
 	public static final int MODIFIED_RESULT = -1;
 	private static final int DEFAULT_RESULT = 0;
 	private static final int MODIFY_GROUP = 1;
@@ -48,10 +48,11 @@ public class GroupDetailsActivity extends ListActivity
         photoGroup = (ImageView) findViewById(R.id.fotoGrupDetall);
         nameGroup = (TextView) findViewById(R.id.nomGrupDetall);
         mEmptyView = (TextView) findViewById(R.id.emptyViewFavourites);
+        mModeButton = (ToggleButton) findViewById(R.id.button_mode);
         mContacts = new ArrayList<Contact>();
-        mAdapter = new MyGroupContactsWithOrderListViewAdapter(this, R.layout.contact_row_without_fav, mContacts);
+        mModeButton.setOnCheckedChangeListener(this);
+        mAdapter = new MyGroupContactsWithOrderListViewAdapter(this, R.layout.contact_row_without_fav, mContacts, group);
         contactsHelper = new ContactsHelper(this);
-        groupsHelper = new GroupsHelper(this);
         setListAdapter(mAdapter);
         getListView().setEmptyView(mEmptyView);
         registerForContextMenu(getListView());
@@ -69,9 +70,7 @@ public class GroupDetailsActivity extends ListActivity
 	{
 		photoGroup.setImageBitmap(group.getPhoto());
 		nameGroup.setText(group.getName());
-		ArrayList<Integer> contactsId = groupsHelper.getContactsIdFromGroup(group.getId());
-		mContacts = contactsHelper.getItemsViewGroupDetails(contactsId);
-    	Collections.sort(mContacts);
+		mContacts = contactsHelper.getItemsViewGroupDetails(group.getContactsId());
     	mAdapter.clear();
     	for (int i = 0; i < mContacts.size(); ++i) mAdapter.add(mContacts.get(i));
     	mAdapter.notifyDataSetChanged();
@@ -108,7 +107,7 @@ public class GroupDetailsActivity extends ListActivity
 	            intent.putExtras(extras);
 	            startActivityForResult(intent, MODIFY_GROUP);
 	    		return true;
-	        case R.id.GroupDetailsOpt2:
+	    	case R.id.GroupDetailsOpt2:
 	        	AlertDialog.Builder deleteBuilderDialog = new AlertDialog.Builder(this);
 	        	deleteBuilderDialog.setTitle(R.string.delete_group_dialog_title);
 	        	deleteBuilderDialog.setIcon(R.drawable.dialog_icon);
@@ -135,6 +134,7 @@ public class GroupDetailsActivity extends ListActivity
 					setResult(MODIFIED_RESULT);
 					finish();
 				}
+				break;
 			case DETAILS_CONTACT:
 				if (resultCode == -1) fillData();
 				break;
@@ -144,5 +144,11 @@ public class GroupDetailsActivity extends ListActivity
 				
 		}
     }
+
+	public void onCheckedChanged(CompoundButton arg0, boolean marcat) {
+		if (marcat) mAdapter.EditMode();
+		else mAdapter.NormalMode();
+		setResult(MODIFIED_RESULT);
+	}
 
 }

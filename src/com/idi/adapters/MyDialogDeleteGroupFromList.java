@@ -24,6 +24,7 @@ public class MyDialogDeleteGroupFromList implements OnClickListener
 	{
 		db.open();
 		db.deleteGroup(this.group.getId());
+		db.deleteGroupContactsRelations(this.group.getId());
 		db.close();
 		groupsActivity.fillData();
 	}

@@ -1,7 +1,6 @@
 package com.idi.database;
 
 import java.util.ArrayList;
-
 import com.idi.classes.Contact;
 import com.idi.classes.Group;
 import android.content.Context;
