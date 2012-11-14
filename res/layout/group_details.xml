@@ -22,7 +22,7 @@
         	android:layout_marginLeft="10dip"
         	android:layout_toRightOf="@id/fotoGrupDetall"
         	
-        	android:maxWidth="120dp"
+        	android:maxWidth="135dp"
         	
         	android:textAppearance="?android:attr/textAppearanceLarge" />
        	
